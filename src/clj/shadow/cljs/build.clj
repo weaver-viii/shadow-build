@@ -590,6 +590,7 @@
                         (map (fn [[macro-ns used-by]]
                                (let [name (str (ns->path macro-ns) ".clj")
                                      url (io/resource name)]
+                                 (require macro-ns)
                                  {:ns macro-ns
                                   :used-by used-by
                                   :name name
@@ -603,8 +604,7 @@
                                      :last-modified (.lastModified file))))))
                         (map (juxt :name identity))
                         (into {}))]
-    (assoc state :macros macro-info)
-    ))
+    (assoc state :macros macro-info)))
 
 (defn step-finalize-config [state]
   (-> state
