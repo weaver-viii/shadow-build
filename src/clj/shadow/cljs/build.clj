@@ -1116,9 +1116,7 @@
 
             out (->> provided-ns
                      (map (fn [ns]
-                            (str "goog.require('" (comp/munge ns) "');"
-                                 (when (= 'cljs.core ns)
-                                   "\ncljs.core.enable_console_print_BANG_();"))))
+                            (str "goog.require('" (comp/munge ns) "');")))
                      (str/join "\n"))
             out (str prepend prepend-js out append-js)
             out (if default
