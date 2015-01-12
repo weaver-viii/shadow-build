@@ -140,7 +140,7 @@
        (persistent!)))
 
 (defn add-goog-dependencies [{:keys [name js-source] :as rc} config]
-  (let [deps (-> (JsFileParser. (.getErrorManager (::cc config)))
+  (let [deps (-> (JsFileParser. (.getErrorManager (closure/make-closure-compiler)))
                  (.parseFile name name js-source))]
     (assoc rc
       :requires (list->ns-set (.getRequires deps))
@@ -1008,7 +1008,7 @@
     [logger "Closure optimize"]
 
     (let [modules (make-closure-modules state build-modules)
-          cc (::cc state)
+          cc (closure/make-closure-compiler)
           co (closure/make-options state)
 
           source-map? (boolean (:source-map state))
@@ -1354,10 +1354,6 @@
   (ana/load-core)
 
   {:compiler-env {} ;; will become env/*compiler*
-
-   ;; some helper functions may require a compiler instance, so just construct it eagerly
-   ::cc (doto (closure/make-closure-compiler)
-          (.disableThreads))
 
    :cache-level :jars
    :source-paths {}
